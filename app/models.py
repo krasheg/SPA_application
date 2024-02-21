@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.exceptions import ValidationError
@@ -22,9 +23,27 @@ def validate_text_file_size(value):
         raise ValidationError(_("File size can't be more than 100 KB."))
 
 
+def validate_html_tags(value):
+    """Validator for comment content, using rules from task"""
+
+    # Regular expression for allowed HTML tags and their attributes
+    allowed_tags = re.compile(r'<(a href="[^"]+" title="[^"]+">|code>|i>|strong>)')
+
+    # Check for allowed HTML tags
+    if not allowed_tags.match(value):
+        raise ValidationError(_('Invalid HTML tags or attributes.'))
+
+    # Regular expression for checking closing tags
+    valid_xhtml = re.compile(r'</(?:a|code|i|strong)>')
+
+    # Check for proper closing of tags
+    if not valid_xhtml.findall(value):
+        raise ValidationError(_('Incorrect HTML tag closing format.'))
+
+
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField()
+    content = models.TextField(validators=[validate_html_tags])
     text_file = models.FileField(upload_to='text_files/', null=True, blank=True,
                                  validators=[validate_text_file_extension, validate_text_file_size])
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
