@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+    <style>
+        .rounded-bg {
+            color: black !important;
+            border: 2px solid black;
+            border-radius: 20px;
+            text-align: center;
+            width: 50%;
+        }
+        .form-error{
+            color: red;
+        }
+    </style>
+
+    <div class="mt-4 p-5 rounded-bg">
+        <h1>Create a new comment</h1>
+        <form action="{% url 'new_comment' parent_id=parent_id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-error">{{ form.non_field_errors }}</div>
+
+            {% for f in form %}
+                {% if f.label %}
+                    <p><label class="form-label"
+                              for="{{ f.id_for_label }}"><strong>{{ f.label }}:</strong></label>{{ f }}</p>
+                    <div class="form-error">{{ f.errors }}</div>
+                {% else %}
+                    <p>{{ f }}</p>
+                {% endif %}
+            {% endfor %}
+
+            <button class="btn btn-success" type="submit">Create post</button>
+        </form>
+    </div>
+
+{% endblock content %}

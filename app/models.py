@@ -19,6 +19,10 @@ class Comment(models.Model):
     def __str__(self):
         return f'{self.user_name} - {self.text[:50]}'
 
+    def save(self, *args, **kwargs):
+        validate_html_tags(self.text)
+        super().save(*args, **kwargs)
+
 
 
 

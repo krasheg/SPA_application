@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+    <table class="table table-striped-columns table-hover" id="calls_info">
+        <tr>
+            <th>User name
+                <a href="{% url 'home' %}?sort=user_name__user_name">&#8593;</a>
+                <a href="{% url 'home' %}?sort=-user_name__user_name">&#8595;</a>
+            </th>
+            <th>Email
+                <a href="{% url 'home' %}?sort=user_name__email">&#8593;</a>
+                <a href="{% url 'home' %}?sort=-user_name__email">&#8595;</a>
+            </th>
+            <th>Created
+                <a href="{% url 'home' %}?sort=created_date">&#8593;</a>
+                <a href="{% url 'home' %}?sort=-created_date">&#8595;</a>
+            </th>
+            <th>Text</th>
+        </tr>
+        {% if not comments %}
+            <h1>No comments yet</h1>
+        {% endif %}
+        {% for comment in comments %}
+            <tr>
+                <td>{{ comment.user_name.user_name }}</td>
+                <td>{{ comment.user_name.email }}</td>
+                <td>{{ comment.created_date }}</td>
+                <td><a href="{% url 'home' %}?parent={{ comment.id }}">{{ comment.text|safe }}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% if is_paginated %}
+        <nav aria-label="...">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="{% url 'home' %}?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;</span>
+                    </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }} <span
+                                class="sr-only"></span></span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"><a class="page-link" href="{% url 'home' %}?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{% url 'home' %}?page={{ page_obj.next_page_number }}">&raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+
+
+{% endblock content %}
