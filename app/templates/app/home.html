@@ -19,6 +19,7 @@
                 <a href="{% url 'home' %}?sort=-created_date">&#8595;</a>
             </th>
             <th>Text</th>
+            <th>Replies</th>
         </tr>
         {% if not comments %}
             <h1>No comments yet</h1>
@@ -28,7 +29,8 @@
                 <td>{{ comment.user_name.user_name }}</td>
                 <td>{{ comment.user_name.email }}</td>
                 <td>{{ comment.created_date }}</td>
-                <td><a href="{% url 'home' %}?parent={{ comment.id }}">{{ comment.text|safe }}</a></td>
+                <td><p>{{ comment.text|safe }}</p></td>
+                <td><a href="{% url 'home' %}?parent={{ comment.id }}">Replies:{{ comment.comment_set.count }}</a></td>
             </tr>
         {% endfor %}
     </table>
