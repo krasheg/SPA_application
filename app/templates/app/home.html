@@ -3,7 +3,13 @@
 {% load static %}
 
 {% block content %}
-
+    <button class="btn btn-secondary">
+        <a class="nav-link" aria-current="page"
+           href="{% url 'new_comment' parent_id=parent_id %}"><strong>{% if parent_id == 0 %}Add new comment{% else %}
+            Add new reply{% endif %}</strong></a>
+    </button>
+    <br>
+    <br>
     <table class="table table-striped-columns table-hover" id="calls_info">
         <tr>
             <th>User name
@@ -20,6 +26,8 @@
             </th>
             <th>Text</th>
             <th>Replies</th>
+            <th>Files</th>
+            <th>Images</th>
         </tr>
         {% if not comments %}
             <h1>No comments yet</h1>
@@ -29,8 +37,21 @@
                 <td>{{ comment.user_name.user_name }}</td>
                 <td>{{ comment.user_name.email }}</td>
                 <td>{{ comment.created_date }}</td>
-                <td><p>{{ comment.text|safe }}</p></td>
+                <td>
+                    <p>{{ comment.text|truncatechars:50|safe }}</p>
+                    {% if comment.text|length > 50 %}
+                        <a href="{% url 'comment_detail' comment.id %}">Read more</a>
+                    {% endif %}
+                </td>
                 <td><a href="{% url 'home' %}?parent={{ comment.id }}">Replies:{{ comment.comment_set.count }}</a></td>
+                <td> {% if comment.image %}
+                    <a href="{{ comment.image.url }}">Image</a>
+                {% endif %}</td>
+                <td>
+                    {% if comment.file %}
+                        <a href="{{ comment.file.url }}">Document</a>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
     </table>
@@ -69,6 +90,7 @@
             </ul>
         </nav>
     {% endif %}
+
 
 
 {% endblock content %}

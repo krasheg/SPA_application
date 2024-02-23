@@ -1,12 +1,11 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, FormView
+from django.views.generic import ListView, FormView, DetailView
 
 from .models import Comment, User
 from .forms import NewComment
 
 menu = [
     {'title': "Home", 'url_name': 'home'},
-    {'title': "New comment", 'url_name': 'new_comment'},
 ]
 
 
@@ -29,6 +28,9 @@ class CommentListView(ListView):
         return context
 
 
+class CommentDetailView(DetailView):
+    model = Comment
+    template_name = 'app/comment_detail.html'
 
 
 class NewCommentView(FormView):
@@ -48,6 +50,7 @@ class NewCommentView(FormView):
 
     def form_valid(self, form):
         try:
+            print(form.cleaned_data)
             self.save(form.cleaned_data)
             return super().form_valid(form)
         except Exception as ex:
@@ -60,19 +63,16 @@ class NewCommentView(FormView):
             email=cleaned_data['email'],
             home_page=cleaned_data['home_page']
         )
+        parent_comment = None
 
         if cleaned_data['parent_id'] != 0:
             parent_id = cleaned_data['parent_id']
             parent_comment = Comment.objects.get(id=parent_id)
 
-            Comment.objects.create(
-                user_name=user_model,
-                text=cleaned_data['text'],
-                parent_comment=parent_comment
-            )
-        else:
-            Comment.objects.create(
-                user_name=user_model,
-                text=cleaned_data['text'],
-            )
-
+        Comment.objects.create(
+            user_name=user_model,
+            text=cleaned_data['text'],
+            parent_comment=parent_comment,
+            file=cleaned_data['file'],
+            image=cleaned_data['image']
+        )

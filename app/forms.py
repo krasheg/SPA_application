@@ -14,3 +14,5 @@ class NewComment(forms.Form):
     text = forms.CharField(max_length=1000, required=True, label="Text",
                            widget=forms.Textarea(attrs={'class': 'form-control'}))
     parent_id = forms.IntegerField(widget=forms.HiddenInput(attrs={'class': 'visually-hidden'}), label=False)
+    file = forms.FileField(label="Upload File", required=False)
+    image = forms.ImageField(label="Upload Image", required=False)

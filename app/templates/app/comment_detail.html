@@ -1,0 +1,19 @@
+<!-- comment_detail.html -->
+{% extends "base.html" %}
+{% block content %}
+    <style>
+
+    </style>
+    <div class="mt-4 p-5 rounded-bg" style="word-wrap: break-word;">
+        <h1>Comment Detail</h1>
+        <div style="background-color:lightgrey; border-radius:20px;">
+            <ul>
+                <li><strong>User Name:</strong> {{ object.user_name }}</li>
+                <li><strong>Email:</strong> {{ object.user.email }}</li>
+                <li><strong>Text:</strong> {{ object.text }}</li>
+            </ul>
+        </div>
+
+
+    </div>
+{% endblock %}
