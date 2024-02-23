@@ -49,11 +49,13 @@ class CommentListCreateAPIView(generics.ListCreateAPIView):
 
 
 class CommentRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
 
 User = get_user_model()
+
 
 class RegisterAPIView(APIView):
     def post(self, request, format=None):
