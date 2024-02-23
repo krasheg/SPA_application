@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import serializers
 from app.models import Comment, User
@@ -34,3 +35,14 @@ class CommentSerializer(serializers.ModelSerializer):
                     validate_text_file_extension(i)
                     validate_text_file_size(i)
         return file
+
+
+User = get_user_model()
+
+
+class UserCreateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
