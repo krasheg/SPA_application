@@ -1,6 +1,7 @@
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse_lazy
-from django.views.generic import ListView, FormView, DetailView
-
+from django.views.generic import ListView, FormView, DetailView, DeleteView
+from app.validators import validate_text_file_size, validate_text_file_extension, validate_image
 from .models import Comment, User
 from .forms import NewComment
 
@@ -50,7 +51,19 @@ class NewCommentView(FormView):
 
     def form_valid(self, form):
         try:
-            print(form.cleaned_data)
+            file = form.cleaned_data['file'],
+
+            image = form.cleaned_data['image']
+            if file:
+                for i in file:
+                    if i is not None:
+                        validate_text_file_extension(i)
+                        validate_text_file_size(i)
+            if image:
+                name = image.name
+                img = validate_image(image)
+                if img is not None:
+                    form.cleaned_data['image'] = SimpleUploadedFile(name, img)
             self.save(form.cleaned_data)
             return super().form_valid(form)
         except Exception as ex:
@@ -76,3 +89,9 @@ class NewCommentView(FormView):
             file=cleaned_data['file'],
             image=cleaned_data['image']
         )
+
+
+class CommentDeleteView(DeleteView):
+    model = Comment
+    template_name = 'app/comment_delete.html'
+    success_url = reverse_lazy('home')

@@ -26,8 +26,9 @@
             </th>
             <th>Text</th>
             <th>Replies</th>
-            <th>Files</th>
-            <th>Images</th>
+            <th>Image</th>
+            <th>File</th>
+            <th>Delete</th>
         </tr>
         {% if not comments %}
             <h1>No comments yet</h1>
@@ -52,6 +53,7 @@
                         <a href="{{ comment.file.url }}">Document</a>
                     {% endif %}
                 </td>
+            <td><a href="{% url 'comment_delete' comment.id %}" style="color:red;">Delete</a></td>
             </tr>
         {% endfor %}
     </table>

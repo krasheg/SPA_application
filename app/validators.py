@@ -1,6 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 import re
+import io
+import pathlib
+from PIL import Image
 
 
 def validate_text_file_extension(value):
@@ -30,3 +33,21 @@ def validate_html_tags(value):
     closing_tags = re.findall(r"<\s*/\s*([a-zA-Z]+)\s*>", str(value))
     if len(opening_tags) != len(closing_tags):
         raise ValidationError("HTML tags are not closed")
+
+
+def validate_image(image):
+    image_content = image.read()
+
+    with Image.open(io.BytesIO(image_content)) as img:
+        file_ext = pathlib.Path(image.name).suffix
+
+        if file_ext.lower() in (".jpg", ".png", ".gif"):
+            if img.width > 320 or img.height > 240:
+                img.thumbnail((320, 240))
+                output = io.BytesIO()
+                img.save(output,
+                         format='PNG')
+                return output.getvalue()
+            else:
+                return None
+    raise ValidationError("Image is not valid!")

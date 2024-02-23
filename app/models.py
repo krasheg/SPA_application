@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
 from app.validators import validate_html_tags, validate_text_file_size, validate_text_file_extension
 
 
