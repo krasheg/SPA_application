@@ -63,7 +63,7 @@ class NewCommentView(FormView):
                 name = image.name
                 img = validate_image(image)
                 if img is not None:
-                    form.cleaned_data['image'] = SimpleUploadedFile(name, img)
+                    form.cleaned_data['image'] = SimpleUploadedFile(f'comment_images/upgraded_{name}', img)
             self.save(form.cleaned_data)
             return super().form_valid(form)
         except Exception as ex:

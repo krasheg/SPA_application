@@ -50,4 +50,4 @@ def validate_image(image):
                 return output.getvalue()
             else:
                 return None
-    raise ValidationError("Image is not valid!")
+    raise ValidationError('Image is not valid!Must be ".jpg", ".png", ".gif" ')
