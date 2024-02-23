@@ -31,6 +31,8 @@ necessary for performing CRUD operations on users and comments.
 Navigate to the project directory:
 `bash cd SPA_application`
 
+Create file `.env` from `.env_sample`. Use your own data or just copy existing
+
 Build and run the Docker containers:
 
 `docker-compose up --build`
